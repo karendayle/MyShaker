@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.google.android.glass.app.Card;
 
 public class SensorReader extends Activity implements SensorEventListener {
 	
@@ -27,12 +28,14 @@ public class SensorReader extends Activity implements SensorEventListener {
     	positions[writeIndex][0]=x;
     	positions[writeIndex][1]=y;
     	positions[writeIndex][2]=z;
-    	if (writeIndex == 100) {
+    	if (writeIndex == 99) {
     		writeIndex = 0;
     	}
     	else {
     		writeIndex++;
     	}
+    	//System.out.print(x + " " + y + " " + z);
+        //System.out.println();
     }
     
     // 01/04/2014 daylek
@@ -40,7 +43,7 @@ public class SensorReader extends Activity implements SensorEventListener {
     	x = positions[readIndex][0];
     	y = positions[readIndex][1];
     	z = positions[readIndex][2];
-    	if (readIndex == 100) {
+    	if (readIndex == 99) {
     		readIndex = 0;
     	} 
     	else {
@@ -54,11 +57,25 @@ public class SensorReader extends Activity implements SensorEventListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         mInitialized = false;
+        readIndex = 0; // 01/04/2014 daylek
+        writeIndex = 0; // 01/04/2014 daylek
+        
+        
+        // 01/05/2014 brought in from FirstCard.java
+        // Note: this needs to be in front of the listener reg
+        /*Card card = new Card(this);
+        card.setText("Accelerometer");
+        card.setFootnote("my beautiful glass");
+        card.setImageLayout(Card.ImageLayout.FULL);
+        card.addImage(R.drawable.photo_cat);
+            
+        setContentView(card.toView()); */
+        
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mSensorManager.registerListener(this, mAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
-        readIndex = 0; // 01/04/2014 daylek
-        writeIndex = 0; // 01/04/2014 daylek
+        
+        
     }
 
     protected void onResume() {
